@@ -1,0 +1,55 @@
+.standby{
+    font-size: xx-large;
+}
+.card{
+    height: 620px; /*posible change*/
+}
+.listOfCSmovies{
+    max-width: 85%;
+}
+.cardContent{
+    display: grid;
+}
+.backgroundForExplanation {
+    pointer-events: none;
+    opacity: 0.1;
+}
+.recSysExplanation {
+    position: absolute;
+    z-index: 2;
+    max-width: 70%;
+}
+.csButton:hover {
+    opacity: 0.7;
+}
+.explanationButton:hover {
+    opacity: 0.5;
+}
+.notSelected {
+    pointer-events: none;
+    opacity: 0.3;
+}
+.custom-range:hover{
+    opacity: 0.8;
+}
+.custom-range::-moz-range-thumb{
+    background: #888;
+    cursor: pointer;
+}
+.custom-range::-webkit-slider-thumb{
+    background: #888;
+    cursor: pointer;
+}
+#listOfMovies{
+    overflow: hidden;
+}
+#navLeft:hover, #navRight:hover{
+    opacity: 0.8;
+}
+#navLeft, #navRight{
+    border-radius: 100px;
+    padding: .4rem 1.1rem;
+}
+.negrita{
+    font-weight: bolder;
+}

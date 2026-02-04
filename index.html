@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/css/mdb.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="styles/styles.css" rel="stylesheet">
+    <title>Recomendaciones de pel&iacute;culas</title>
+</head>
+<body class="elegant-color-dark">
+
+<div class="container">
+    <!-- title -->
+    <div class="row mt-1">
+        <div class="col-sm-12">
+            <header>
+                <h2 class="animated fadeIn py-sm-1 text-light text-center border border-light rounded-lg">
+                    SU SERVICIO DE RECOMENDACI&Oacute;N DE PEL&Iacute;CULAS PERSONALIZADAS
+                </h2>
+            </header>
+        </div>
+    </div>
+<!--    <div class="row justify-content-center">-->
+<!--        <div id="standByMessage" class="col-sm-12 m-2 elegant-color-dark invisible recSysExplanation animated fadeIn">-->
+<!--            <br><br><br><br><br>-->
+<!--            <h1 class="animated fadeIn text-light text-center font-weight-bold">-->
+<!--                Recffy is in StandBy Mode-->
+<!--            </h1>-->
+<!--            <br><br>-->
+<!--            <p class="animated fadeIn pb-sm-1 text-light text-center">-->
+<!--                <i class="fas fa-power-off fa-5x text-light"></i>-->
+<!--            </p>-->
+<!--            <br><br>-->
+<!--            <p class="text-light text-justify animated fadeIn py-sm-1 standby">-->
+<!--                Recffy has a "standby mode" to avoid possible mistakes when you use it as a pillow.-->
+<!--                Please, <span class="font-weight-bold">make a long press on the button </span> behind Recffy-->
+<!--                to turn off his stand-by mode and start using it to control your movie recommendations-->
+<!--            </p>-->
+<!--            <br><br><br>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="row justify-content-center">-->
+<!--        <div id="playMovie" class="col-sm-12 m-2 elegant-color-dark recSysExplanation invisible animated fadeIn">-->
+<!--            <h3 class="animated fadeIn py-sm-1 text-light text-center">-->
+<!--                Currently playing  <span id="movieBeingPlayed" class="font-weight-bold"></span>-->
+<!--            </h3>-->
+<!--            <div class="text-center">-->
+<!--                <img src="sources/movieentry.jpg" class="img-fluid" width="720">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+</div>
+
+<div id="moviesPanel" class="container-fluid">
+    <div class="row align-items-center justify-content-center" >
+        <div class="d-flex col-sm-1 pl-4 justify-content-end">
+            <a class="btn btn-light" role="button" id="navLeft">
+                <i class="fas fa-angle-left fa-3x text-black-50"></i>
+            </a>
+        </div>
+        <div class="col-sm-10 d-flex flex-sm-nowrap mt-2 px-5 listOfMovies animated fadeIn slow" id="listOfMovies">
+        </div>
+        <div class="col-sm-1">
+            <a class="btn btn-light" role="button" id="navRight">
+                <i class="fas fa-angle-right fa-3x text-black-50"></i>
+            </a>
+        </div>
+    </div>
+</div>
+<div id="controlsPanel" class="mt-2 border border-light rounded-lg container">
+    <div class="row mt-2">
+        <div class="col-sm-12">
+            <h5 class="animated fadeIn py-sm-1 text-light text-center">
+                Seleccione su preferencia de <span class="font-weight-bold">emoci&oacute;n</span>. Entre más incremente una emoci&oacute;n, &iexcl;más recomendaciones de ese tipo obtendr&aacute;!
+            </h5>
+        </div>
+    </div>
+    <div class="row mt-1 justify-content-center">
+        <div class="col-sm-2 text-center mr-3">
+            <h5 class="text-light">
+                <i class="far fa-laugh-beam fa-lg mr-1 text-light"></i>
+                Alegr&iacute;a
+            </h5>
+            <div class="small text-light font-weight-lighter" id="comediesShownAmount"></div>
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderComedies">
+            <span class="text-light" id="valueComedies"></span>
+        </div>
+        <div class="col-sm-2 text-center mr-3">
+            <h5 class="text-light">
+                <i class="far fa-grimace fa-lg mr-1 text-light"></i>
+                Miedo
+            </h5>
+            <div class="small text-light font-weight-lighter" id="horrorsShownAmount"></div>
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderHorror">
+            <span class="text-light" id="valueHorror"></span>
+        </div>
+        <div class="col-sm-2 text-center">
+            <h5 class="text-light">
+                <i class="far fa-grin-hearts fa-lg mr-1 text-light"></i>
+                Rom&aacute;ntico
+            </h5>
+            <div class="small text-light font-weight-lighter" id="romancesShownAmount"></div>
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderRomance">
+            <span class="text-light" id="valueRomance"></span>
+        </div>
+        <div class="col-sm-2 text-center ml-3">
+            <h5 class="text-light">
+                <i class="far fa-sad-cry fa-lg mr-1 text-light"></i>
+                Melanc&oacute;lico
+            </h5>
+            <div class="small text-light font-weight-lighter" id="dramasShownAmount"></div>
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderDrama">
+            <span class="text-light" id="valueDrama"></span>
+        </div>
+        <div class="col-sm-2 text-center ml-3">
+            <h5 class="text-light">
+                <i class="far fa-surprise fa-lg mr-1 text-light"></i>
+                Asombro
+            </h5>
+            <div class="small text-light font-weight-lighter" id="adventuresShownAmount"></div>
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderAdventure">
+            <span class="text-light" id="valueAdventure"></span>
+        </div>
+    </div>
+    <div class="row mt-2 mb-2 justify-content-center">
+        <div class="text-light font-weight-lighter" id="randomShownAmount"></div>
+    </div>
+</div>
+<div class="container">
+    <div class="row my-1 align-items-center">
+        <div class="col-sm-12">
+            <footer>
+                <p class="animated fadeIn pt-sm-2 pb-sm-1 text-light text-center">
+                    Todas las pel&iacute;culas y su contenido se obtienen gracias a <img src="sources/logos/tmdbFooter.svg" width="140">
+                </p>
+                <p>
+                      <button id="connectBtn" class="btn btn-success">Conectar</button>
+                </p>
+            </footer>            
+        </div>
+    </div>
+</div>
+
+<!-- Optional JavaScript -->
+<!-- JQuery -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- Bootstrap tooltips -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+<!-- Bootstrap core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<!-- MDB core JavaScript -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.15.0/js/mdb.min.js"></script>
+<!-- Scripts -->
+<script type="text/javascript" src="scripts/indexScripts.js"></script>
+<script type="text/javascript" src="scripts/websocket.js"></script>
+<script type="text/javascript" src="scripts/commhandler.js"></script>
+</body>
+</html>
