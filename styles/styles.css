@@ -53,3 +53,7 @@
 .negrita{
     font-weight: bolder;
 }
+.hidden {
+  display: none;
+}
+

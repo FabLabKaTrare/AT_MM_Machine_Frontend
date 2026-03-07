@@ -91,8 +91,9 @@
                 Alegr&iacute;a
             </h5>
             <div class="small text-light font-weight-lighter" id="comediesShownAmount"></div>
-            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderComedies">
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderComedies" hidden="true">
             <span class="text-light" id="valueComedies"></span>
+             <div class="small text-light font-weight-lighter">[amarillo]</div>
         </div>
         <div class="col-sm-2 text-center mr-3">
             <h5 class="text-light">
@@ -100,8 +101,9 @@
                 Miedo
             </h5>
             <div class="small text-light font-weight-lighter" id="horrorsShownAmount"></div>
-            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderHorror">
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderHorror" hidden="true">
             <span class="text-light" id="valueHorror"></span>
+             <div class="small text-light font-weight-lighter">[azul]</div>
         </div>
         <div class="col-sm-2 text-center">
             <h5 class="text-light">
@@ -109,8 +111,9 @@
                 Rom&aacute;ntico
             </h5>
             <div class="small text-light font-weight-lighter" id="romancesShownAmount"></div>
-            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderRomance">
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderRomance" hidden="true">
             <span class="text-light" id="valueRomance"></span>
+             <div class="small text-light font-weight-lighter">[rojo]</div>
         </div>
         <div class="col-sm-2 text-center ml-3">
             <h5 class="text-light">
@@ -118,8 +121,9 @@
                 Melanc&oacute;lico
             </h5>
             <div class="small text-light font-weight-lighter" id="dramasShownAmount"></div>
-            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderDrama">
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderDrama" hidden="true">
             <span class="text-light" id="valueDrama"></span>
+             <div class="small text-light font-weight-lighter">[naranja]</div>
         </div>
         <div class="col-sm-2 text-center ml-3">
             <h5 class="text-light">
@@ -127,8 +131,9 @@
                 Asombro
             </h5>
             <div class="small text-light font-weight-lighter" id="adventuresShownAmount"></div>
-            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderAdventure">
+            <input type="range" class="custom-range" min="0" max="100" step="25" id="sliderAdventure" hidden="true">
             <span class="text-light" id="valueAdventure"></span>
+            <div class="small text-light font-weight-lighter">[verde]</div>
         </div>
     </div>
     <div class="row mt-2 mb-2 justify-content-center">
@@ -144,6 +149,7 @@
                 </p>
                 <p>
                       <button id="connectBtn" class="btn btn-success">Conectar</button>
+                       <button id="showSlidersBtn" class="btn btn-success">Show sliders</button>
                 </p>
             </footer>            
         </div>

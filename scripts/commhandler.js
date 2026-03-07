@@ -1,4 +1,3 @@
-
 const sliderComedies = document.getElementById("sliderComedies");
 const sliderAdventure = document.getElementById("sliderAdventure");
 const sliderDrama = document.getElementById("sliderDrama");
@@ -11,16 +10,28 @@ let valueRomances = document.getElementById("valueRomance");
 let valueDramas = document.getElementById("valueDrama");
 let valueAdventures = document.getElementById("valueAdventure");
 
+ let alegriaVal = 0; //Amarillo
+    let miedoVal = 0 //Azul
+    let romanticoVal = 0 //Rojo
+    let melancolicoVal = 0 //Naranja
+    let asombroVal = 0//Verde
+
+    let showSliders = false;
+
 let port = null;
 let reader = null;
-let buffer = null;
-
-//Harold manda un vector con numeros -- 1m2m2m4m4 --  [am, az, r, n, v]
-//Alegria -- Amarillo
-//Melancolico -- Azul
-//Romantico -- Rojo
-//Asombro -- Naranja
-//Miedo -- Verde
+let buffer = "";
+let device = null;
+let server = null;
+let service = null;
+let txChar = null;
+let rxChar = null;
+//Harold manda un vector con numeros -- 1 2 2 4 4 --  [am, az, r, n, v]
+//Alegria     -- Amarillo
+//Miedo       -- Azul
+//Romantico   -- Rojo
+//Melancolico -- Naranja
+//Asombro     -- Verde
 function handleMessage(message) {
   //control de mensajes desde la placa
 
@@ -36,15 +47,12 @@ function handleMessage(message) {
     const [am, az, r, n, v] = msg.data.map((x) =>
       Math.max(0, Math.min(4, parseInt(x, 10))),
     );
-    data = `${r} ${v} ${am} ${az} ${n}`;
-
-    console.log("Perfil: ", data);
-
-    let romanticoVal = parseInt(r); //Rojo
-    let miedoVal = parseInt(v); //Verde
-    let alegriaVal = parseInt(am); //Amarillo
-    let melancolicoVal = parseInt(az); //Azul
-    let asombroVal = parseInt(n); //Naranja
+    
+    alegriaVal = parseInt(am); //Amarillo
+    miedoVal = parseInt(az); //Azul
+    romanticoVal = parseInt(r); //Rojo
+    melancolicoVal = parseInt(n); //Naranja
+    asombroVal = parseInt(v); //Verde
 
     if (romanticoVal > 4) {
       romanticoVal = 4;
@@ -62,11 +70,11 @@ function handleMessage(message) {
       asombroVal = 4;
     }
     console.log("Colores Recibidos");
-    console.log("Rojo: " + romanticoVal);
-    console.log("Verde: " + miedoVal);
     console.log("Amarillo: " + alegriaVal);
-    console.log("Azul: " + melancolicoVal);
-    console.log("Naranja: " + asombroVal);
+    console.log("Azul: " + miedoVal);
+    console.log("Rojo: " + romanticoVal);
+    console.log("Naranja: " + melancolicoVal);
+    console.log("Verde: " + asombroVal);
 
     sliderRomance.value = romanticoVal * 25;
     sliderHorror.value = miedoVal * 25;
@@ -96,105 +104,199 @@ function handleMessage(message) {
     let asombroVal = parseInt(sliderAdventure.value) / 25;
     console.log(
       "Enviando perfil: " +
-        [alegriaVal, melancolicoVal, romanticoVal, asombroVal, miedoVal].join(
+        [alegriaVal,miedoVal,romanticoVal, melancolicoVal, asombroVal].join(
           " ",
         ),
     );
-    sendData("7,14,2," + [alegriaVal, melancolicoVal, romanticoVal, asombroVal, miedoVal].join(" ") + "\n");
+    sendBLE(
+        [alegriaVal,miedoVal,romanticoVal, melancolicoVal, asombroVal ].join(
+          " ",
+        ) +
+        "\n",
+    );
   }
 }
 
-// Botón de conectar/desconectar
-document.getElementById("connectBtn").onclick = async () => {
-  if (port && port.readable) {
-    // Desconectar
-    await disconnectSerial();
-  } else {
-    // Conectar
-    await connectSerial();
+// Botón de mostrar sliders
+document.getElementById("showSlidersBtn").onclick = async () => {
+  toggleVisibility(sliderAdventure)
+  toggleVisibility(sliderComedies)
+  toggleVisibility(sliderDrama)
+  toggleVisibility(sliderHorror)
+  toggleVisibility(sliderRomance)
+  showSliders = sliderAdventure.hidden
+
+  if(showSliders === false)
+  {
+document.getElementById("showSlidersBtn").textContent = "Hide sliders"
+  }
+  else{
+document.getElementById("showSlidersBtn").textContent = "Show sliders"
   }
 };
 
-// Funciones para conexión Serial
-async function connectSerial() {
+function toggleVisibility(element) {
+  //const element = document.getElementById(id);
+  element.hidden = !element.hidden;
+}
+
+
+// Botón de conectar/desconectar
+document.getElementById("connectBtn").onclick = async () => {
+  if (device && device.gatt.connected) {
+    await onDisconnected();
+  } else {
+    await connectBLE();
+  }
+};
+
+// Funciones para BLE
+
+function onDisconnected() {
+  if (device && device.gatt.connected) {
+    device.gatt.disconnect();
+  }
+
+  device = null;
+  server = null;
+  service = null;
+  txChar = null;
+  rxChar = null;
+
+  console.log("Desconectado");
+
+  console.log("BLE desconectado");
+
+  document.getElementById("connectBtn").textContent = "Conectar Bluetooth";
+  document.getElementById("connectBtn").className = "btn btn-success";
+}
+
+async function connectBLE() {
   try {
-    console.log("Solicitando puerto serial (baudRate: 115200)...");
-    port = await navigator.serial.requestPort();
-    await port.open({ baudRate: 115200 });
 
-    document.getElementById("connectBtn").textContent = "Desconectar";
-    document.getElementById("connectBtn").className = "btn btn-danger";
+    buffer = "";
 
-    reader = port.readable.getReader();
-    sendData("1,0,0,0\n");
-    readData();
-  } catch (error) {
-    console.log(`Error de conexión: ${error.message}`);
+    device = await navigator.bluetooth.requestDevice({
+      filters: [{ namePrefix: "AT MM" }],
+      optionalServices: ["6e400001-b5a3-f393-e0a9-e50e24dcca9e"],
+    });
+
+    device.addEventListener('gattserverdisconnected', onDisconnected);
+
+    server = await device.gatt.connect();
+
+    service = await server.getPrimaryService(
+      "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+    );
+
+    txChar = await service.getCharacteristic(
+      "6e400003-b5a3-f393-e0a9-e50e24dcca9e"
+    );
+
+    rxChar = await service.getCharacteristic(
+      "6e400002-b5a3-f393-e0a9-e50e24dcca9e"
+    );
+
+    await txChar.startNotifications();
+    txChar.addEventListener("characteristicvaluechanged", handleBLEData);
+
+    console.log("Conectado vía BLE");
+
+     document.getElementById("connectBtn").textContent = "Desconectar Bluetooth";
+  document.getElementById("connectBtn").className = "btn btn-danger";
+
+  } catch (err) {
+    console.log("Error BLE: " + err);
   }
 }
-// Desconectar Serial
-async function disconnectSerial() {
-  try {
-    if (reader) {
-      await reader.cancel();
-      await reader.releaseLock();
-      reader = null;
-    }
 
-    if (port) {
-      await port.close();
-      port = null;
-    }
+function handleBLEData(event) {
+  const value = new TextDecoder().decode(event.target.value);
+  console.log("[BLE Event]: " + value)
+  processReceivedData(value.trim());
+}
 
-    document.getElementById("connectBtn").textContent = "Conectar Bluetooth";
-    document.getElementById("connectBtn").className = "btn btn-success";
-  } catch (error) {
-    console.log(`Error al desconectar: ${error.message}`);
+function processIncoming(data) {
+  buffer += data;
+
+  let lines = buffer.split("\n");
+  buffer = lines.pop();
+
+  for (let line of lines) {
+    console.log("Received data: " + line.trim());
+    processReceivedData(line.trim());
   }
 }
+
+async function sendBLE(text) {
+  if (!rxChar) return;
+
+  const data = new TextEncoder().encode(text + "\n");
+  await rxChar.writeValue(data);
+
+  console.log("[BLE send]:", text);
+}
+
+// async function disconnectBLE() {
+//   if (device && device.gatt.connected) {
+//     device.gatt.disconnect();
+//   }
+
+//   device = null;
+//   server = null;
+//   service = null;
+//   txChar = null;
+//   rxChar = null;
+
+//   console.log("Desconectado");
+
+//   document.getElementById("connectBtn").textContent = "Conectar Bluetooth";
+//   document.getElementById("connectBtn").className = "btn btn-success";
+// }
+
 // Leer datos del Serial
-async function readData() {
-  try {
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) {
-        // Permitir que la secuencia serial se cierre correctamente.
-        reader.releaseLock();
-        break;
-      }
+// async function readData() {
+//   try {
+//     while (true) {
+//       const { value, done } = await reader.read();
+//       if (done) {
+//         // Permitir que la secuencia serial se cierre correctamente.
+//         reader.releaseLock();
+//         break;
+//       }
 
-      if (value) {
-        // Convertir el valor recibido a una cadena y agregar al buffer
-        const receivedString = new TextDecoder().decode(value);
-        buffer += receivedString;
+//       if (value) {
+//         // Convertir el valor recibido a una cadena y agregar al buffer
+//         const receivedString = new TextDecoder().decode(value);
+//         buffer += receivedString;
 
-        // Procesar el buffer para encontrar mensajes completos
-        processBuffer();
-      }
-    }
-  } catch (error) {
-    logMessage(`Error al leer datos: ${error.message}`);
-  }
-}
+//         // Procesar el buffer para encontrar mensajes completos
+//         processBuffer();
+//       }
+//     }
+//   } catch (error) {
+//     console.log(`Error al leer datos: ${error.message}`);
+//   }
+// }
 // Procesar el buffer para extraer líneas completas
-function processBuffer() {
-  // Buscar líneas completas en el buffer
-  let lineEndIndex;
-  while ((lineEndIndex = buffer.indexOf("\n")) >= 0) {
-    // Extraer la línea completa
-    const line = buffer.substring(0, lineEndIndex).trim();
-    // Eliminar la línea procesada del buffer
-    buffer = buffer.substring(lineEndIndex + 1);
+// function processBuffer() {
+//   // Buscar líneas completas en el buffer
+//   let lineEndIndex;
+//   while ((lineEndIndex = buffer.indexOf("\n")) >= 0) {
+//     // Extraer la línea completa
+//     const line = buffer.substring(0, lineEndIndex).trim();
+//     // Eliminar la línea procesada del buffer
+//     buffer = buffer.substring(lineEndIndex + 1);
 
-    if (line) {
-      processReceivedData(line);
-    }
-  }
-}
+//     if (line) {
+//       processReceivedData(line);
+//     }
+//   }
+// }
 // Procesar una línea recibida del Serial
 function processReceivedData(line) {
   let message = String(line || "").trim();
-  console.log("Receiving from SerialPort: " + message);
+  console.log("Receiving from Transporter: " + message);
 
   // Estandarizar protocolo:
   if (message.startsWith("setPerfil")) {
@@ -214,20 +316,20 @@ function processReceivedData(line) {
   }
 }
 // Enviar datos al Serial
-async function sendData(message) {
-  if (!port || !port.writable) {
-    console.log("Error: No conectado al dispositivo");
-    return;
-  }
+// async function sendData(message) {
+//   if (!port || !port.writable) {
+//     console.log("Error: No conectado al dispositivo");
+//     return;
+//   }
 
-  try {
-    const writer = port.writable.getWriter();
-    const data = new TextEncoder().encode(message);
-    await writer.write(data);
-    writer.releaseLock();
+//   try {
+//     const writer = port.writable.getWriter();
+//     const data = new TextEncoder().encode(message);
+//     await writer.write(data);
+//     writer.releaseLock();
 
-    console.log("Enviado: " + message.trim());
-  } catch (error) {
-    console.log("Error al enviar datos: " + error.message);
-  }
-}
+//     console.log("Enviado: " + message.trim());
+//   } catch (error) {
+//     console.log("Error al enviar datos: " + error.message);
+//   }
+// }
