@@ -3,7 +3,7 @@ const posterbaseURL = "http://image.tmdb.org/t/p/original/";
 const tmdbAPIbaseURL = "https://api.themoviedb.org/3/movie/";
 
 const firstMovieId=2898; // As good as it gets (1997)
-const secondMovieId=1316092; // Wuthering Heights (2026)
+const secondMovieId=1054867; // One Battle After Another
 
 const TMDBgenres = [
     {
@@ -121,11 +121,11 @@ function loadRecommendedMovies() {
     getRecommendedMoviesBasedOnMovie(firstMovieId, 1, function (result) {
         firstMovieRecs = assignExplanation(result.results,"As good as it gets");
         getRecommendedMoviesBasedOnMovie(secondMovieId, 1, function (result) {
-            secondMovieRecs = assignExplanation(result.results,"Wuthering Heights");
+            secondMovieRecs = assignExplanation(result.results,"One Battle After Another");
             getRecommendedMoviesBasedOnMovie(firstMovieId, 2, function (result) {
                 thirdMovieRecs = assignExplanation(result.results,"As good as it gets");
                 getRecommendedMoviesBasedOnMovie(secondMovieId, 2, function (result) {
-                    fourthMovieRecs = assignExplanation(result.results,"Wuthering Heights");
+                    fourthMovieRecs = assignExplanation(result.results,"One Battle After Another");
                     let listOfAllRecommendations = firstMovieRecs.concat(secondMovieRecs, thirdMovieRecs,fourthMovieRecs);
                     eraseRepeatedMovies(listOfAllRecommendations, firstMovieId, secondMovieId);
                     randomizeMovies(listOfAllRecommendations);
