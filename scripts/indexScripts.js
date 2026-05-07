@@ -2,8 +2,8 @@ const api_key = "f6e86a545df19d917c415a89c7adffb8";
 const posterbaseURL = "http://image.tmdb.org/t/p/original/";
 const tmdbAPIbaseURL = "https://api.themoviedb.org/3/movie/";
 
-const firstMovieId=2898; // As good as it gets (1997)
-const secondMovieId=1054867; // One Battle After Another
+const firstMovieId=1054867; // As good as it gets (1997)
+const secondMovieId=2898; // One Battle After Another
 
 const TMDBgenres = [
     {
