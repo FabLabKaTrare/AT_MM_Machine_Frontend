@@ -3,7 +3,7 @@ const posterbaseURL = "http://image.tmdb.org/t/p/original/";
 const tmdbAPIbaseURL = "https://api.themoviedb.org/3/movie/";
 
 const firstMovieId=872585; // Oppenheimer
-const secondMovieId=823219; // Flow
+const secondMovieId=858024; // Hamnet (2025)
 
 const TMDBgenres = [
     {
@@ -121,11 +121,11 @@ function loadRecommendedMovies() {
     getRecommendedMoviesBasedOnMovie(firstMovieId, 1, function (result) {
         firstMovieRecs = assignExplanation(result.results,"Oppenheimer");
         getRecommendedMoviesBasedOnMovie(secondMovieId, 1, function (result) {
-            secondMovieRecs = assignExplanation(result.results,"Flow");
+            secondMovieRecs = assignExplanation(result.results,"Hamnet");
             getRecommendedMoviesBasedOnMovie(firstMovieId, 2, function (result) {
                 thirdMovieRecs = assignExplanation(result.results,"Oppenheimer");
                 getRecommendedMoviesBasedOnMovie(secondMovieId, 2, function (result) {
-                    fourthMovieRecs = assignExplanation(result.results,"Flow");
+                    fourthMovieRecs = assignExplanation(result.results,"Hamnet");
                     let listOfAllRecommendations = firstMovieRecs.concat(secondMovieRecs, thirdMovieRecs,fourthMovieRecs);
                     eraseRepeatedMovies(listOfAllRecommendations, firstMovieId, secondMovieId);
                     randomizeMovies(listOfAllRecommendations);
