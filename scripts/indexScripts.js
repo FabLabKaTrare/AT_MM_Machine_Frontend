@@ -125,7 +125,7 @@ function loadRecommendedMovies() {
             getRecommendedMoviesBasedOnMovie(firstMovieId, 2, function (result) {
                 thirdMovieRecs = assignExplanation(result.results,"One Battle After Another");
                 getRecommendedMoviesBasedOnMovie(secondMovieId, 2, function (result) {
-                    fourthMovieRecs = assignExplanation(result.results,"One Battle After Another");
+                    fourthMovieRecs = assignExplanation(result.results,"Hamnet");
                     let listOfAllRecommendations = firstMovieRecs.concat(secondMovieRecs, thirdMovieRecs,fourthMovieRecs);
                     eraseRepeatedMovies(listOfAllRecommendations, firstMovieId, secondMovieId);
                     randomizeMovies(listOfAllRecommendations);
