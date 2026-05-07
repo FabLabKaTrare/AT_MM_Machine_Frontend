@@ -2,7 +2,7 @@ const api_key = "f6e86a545df19d917c415a89c7adffb8";
 const posterbaseURL = "http://image.tmdb.org/t/p/original/";
 const tmdbAPIbaseURL = "https://api.themoviedb.org/3/movie/";
 
-const firstMovieId=1034716; // People We Meet on Vacation
+const firstMovieId=2898; // As good as it gets (1997)
 const secondMovieId=1316092; // Wuthering Heights (2026)
 
 const TMDBgenres = [
@@ -119,13 +119,13 @@ $(document).ready(function () {
 function loadRecommendedMovies() {
     let firstMovieRecs = [], secondMovieRecs = [], thirdMovieRecs = [], fourthMovieRecs = [];
     getRecommendedMoviesBasedOnMovie(firstMovieId, 1, function (result) {
-        firstMovieRecs = assignExplanation(result.results,"El Brutalista");
+        firstMovieRecs = assignExplanation(result.results,"As good as it gets");
         getRecommendedMoviesBasedOnMovie(secondMovieId, 1, function (result) {
-            secondMovieRecs = assignExplanation(result.results,"Duna: Segunda Parte");
+            secondMovieRecs = assignExplanation(result.results,"Wuthering Heights");
             getRecommendedMoviesBasedOnMovie(firstMovieId, 2, function (result) {
-                thirdMovieRecs = assignExplanation(result.results,"El Brutalista");
+                thirdMovieRecs = assignExplanation(result.results,"As good as it gets");
                 getRecommendedMoviesBasedOnMovie(secondMovieId, 2, function (result) {
-                    fourthMovieRecs = assignExplanation(result.results,"Duna: Segunda Parte");
+                    fourthMovieRecs = assignExplanation(result.results,"Wuthering Heights");
                     let listOfAllRecommendations = firstMovieRecs.concat(secondMovieRecs, thirdMovieRecs,fourthMovieRecs);
                     eraseRepeatedMovies(listOfAllRecommendations, firstMovieId, secondMovieId);
                     randomizeMovies(listOfAllRecommendations);
