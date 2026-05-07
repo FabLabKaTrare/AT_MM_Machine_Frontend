@@ -2,8 +2,8 @@ const api_key = "f6e86a545df19d917c415a89c7adffb8";
 const posterbaseURL = "http://image.tmdb.org/t/p/original/";
 const tmdbAPIbaseURL = "https://api.themoviedb.org/3/movie/";
 
-const firstMovieId=1054867; // One Battle After Another (2026)
-const secondMovieId=858024; // Hamnet (2025)
+const firstMovieId=872585; // Oppenheimer
+const secondMovieId=823219; // Flow
 
 const TMDBgenres = [
     {
@@ -119,13 +119,13 @@ $(document).ready(function () {
 function loadRecommendedMovies() {
     let firstMovieRecs = [], secondMovieRecs = [], thirdMovieRecs = [], fourthMovieRecs = [];
     getRecommendedMoviesBasedOnMovie(firstMovieId, 1, function (result) {
-        firstMovieRecs = assignExplanation(result.results,"One Battle After Another");
+        firstMovieRecs = assignExplanation(result.results,"Oppenheimer");
         getRecommendedMoviesBasedOnMovie(secondMovieId, 1, function (result) {
-            secondMovieRecs = assignExplanation(result.results,"Hamnet");
+            secondMovieRecs = assignExplanation(result.results,"Flow");
             getRecommendedMoviesBasedOnMovie(firstMovieId, 2, function (result) {
-                thirdMovieRecs = assignExplanation(result.results,"One Battle After Another");
+                thirdMovieRecs = assignExplanation(result.results,"Oppenheimer");
                 getRecommendedMoviesBasedOnMovie(secondMovieId, 2, function (result) {
-                    fourthMovieRecs = assignExplanation(result.results,"Hamnet");
+                    fourthMovieRecs = assignExplanation(result.results,"Flow");
                     let listOfAllRecommendations = firstMovieRecs.concat(secondMovieRecs, thirdMovieRecs,fourthMovieRecs);
                     eraseRepeatedMovies(listOfAllRecommendations, firstMovieId, secondMovieId);
                     randomizeMovies(listOfAllRecommendations);
