@@ -2,8 +2,8 @@ const api_key = "f6e86a545df19d917c415a89c7adffb8";
 const posterbaseURL = "http://image.tmdb.org/t/p/original/";
 const tmdbAPIbaseURL = "https://api.themoviedb.org/3/movie/";
 
-const firstMovieId=549509; // The brutalist
-const secondMovieId=693134; // Dune part two
+const firstMovieId=1054867; // One Battle After Another
+const secondMovieId=1316092; // Wuthering Heights (2026)
 
 const TMDBgenres = [
     {
